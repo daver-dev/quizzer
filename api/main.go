@@ -1,27 +1,38 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
-	database "github.com/daver-dev/quizzer/database"
-	routes "github.com/daver-dev/quizzer/routes"
+	"github.com/daver-dev/quizzer/database"
+	"github.com/daver-dev/quizzer/routes"
+	"github.com/daver-dev/quizzer/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
-func main() { 
-	err := godotenv.Load()
-  if err != nil {
-   log.Fatalln(err)
-  }
-	defer database.Disconnect()
-	router := gin.Default()
-	router.GET("/questions", routes.ListQuestions)
-	router.GET("/search", routes.SearchQuestions)
-	router.POST("/answer", routes.AnswerQuestion)
-	router.Run("localhost:8080")
-	fmt.Println("yo")
+var CommonHeaders = map[string]string{
+	"Accept":                      "application/json",
+	"Access-Control-Allow-Origin": "*",
+	"X-Content-Type-Options":      "nosniff",
 }
 
-// 6665ba7b0591bb5f9ece7629
+func main() {
+	questions := utils.LoadQuestions("./assets/questions.json")
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer database.Disconnect()
+	router := gin.Default()
+
+	router.Use(func(c *gin.Context) {
+		for key, value := range CommonHeaders {
+			c.Header(key, value)
+		}
+		c.Next()
+	})
+
+	router.GET("/search", routes.SearchQuestions(questions))
+	router.POST("/answer", routes.AnswerQuestion(questions))
+	router.Run("localhost:8080")
+}
