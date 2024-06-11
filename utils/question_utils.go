@@ -8,36 +8,13 @@ import (
 	"log"
 	"os"
 	"strings"
-	"time"
 
-	models "github.com/daver-dev/quizzer/models"
-	// "go.mongodb.org/mongo-driver/bson"
+	"github.com/daver-dev/quizzer/models"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var client *mongo.Client
 
-var answersCollection *mongo.Collection
-var answersCollectionName = "userAnswers"
-
-func GetClient() *mongo.Client {
-	uri := os.Getenv("DATABASE_URL")
-
-	if client != nil {
-		return client
-	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	return client
-}
 
 func LoadQuestions(fileName string) []models.Question {
 	var questions []models.Question

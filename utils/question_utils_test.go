@@ -39,7 +39,6 @@ func TestLoadQuestions(t *testing.T) {
 }
 
 func TestFindQuestion(t *testing.T) {
-	// Test cases
 	tests := []struct {
 		name         string
 		searchString string
@@ -92,7 +91,6 @@ func TestIsAnswerCorrect(t *testing.T) {
 		},
 	}
 
-	// Run test cases
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			isCorrect := utils.IsAnswerCorrect(testQuestions[0], tt.answer)

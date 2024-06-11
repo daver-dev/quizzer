@@ -25,7 +25,6 @@ func SearchQuestions(questions []models.Question) gin.HandlerFunc {
 }
 
 // Route to answer questions with the query parameters username, questionId, and answerNumber
-
 func AnswerQuestion(questions []models.Question) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		questionIdParam := c.Query("questionId")
